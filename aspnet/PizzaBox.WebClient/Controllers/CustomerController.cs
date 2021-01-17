@@ -6,6 +6,7 @@ using PizzaBox.WebClient.Models;
 
 namespace PizzaBox.WebClient.Controllers
 {
+  [Route("[controller]")] // route parser
   public class CustomerController : Controller
   {
     private readonly PizzaBoxRepository _ctx;

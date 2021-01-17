@@ -59,7 +59,7 @@ namespace PizzaBox.WebClient
 
       app.UseEndpoints(endpoints =>
       {
-        endpoints.MapControllerRoute(
+        endpoints.MapControllerRoute( // global routing
                   name: "default",
                   pattern: "{controller=Home}/{action=Index}/{id?}");
       });
