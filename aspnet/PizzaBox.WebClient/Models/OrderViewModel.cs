@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Microsoft.Extensions.Configuration;
-using PizzaBox.Storing;
+using PizzaBox.Domain.Models;
 
 namespace PizzaBox.WebClient.Models
 {

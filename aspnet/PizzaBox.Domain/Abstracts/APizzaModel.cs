@@ -22,14 +22,14 @@ namespace PizzaBox.Domain.Abstracts
             return Crust.Price + Size.Price + TypePrice;
         }
 
-        public void AddCrust(List<Crust> availCrusts)
+        public void AddCrust(List<Crust> availCrusts, string crustName)
         {
-            Crust = availCrusts.Find(c => c.Name == "Regular");
+            Crust = availCrusts.Find(c => c.Name == crustName);
         }
 
-        public void AddSize(List<Size> availSizes)
+        public void AddSize(List<Size> availSizes, string sizeName)
         {
-            Size = availSizes.Find(s => s.Name == "Medium");
+            Size = availSizes.Find(s => s.Name == sizeName);
         }
 
         public override string ToString()

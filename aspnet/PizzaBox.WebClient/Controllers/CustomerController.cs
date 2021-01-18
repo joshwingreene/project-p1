@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using PizzaBox.Storing;
 using PizzaBox.WebClient.Models;
+using System.Collections.Generic;
+using PizzaBox.Domain;
+using System;
 
 namespace PizzaBox.WebClient.Controllers
 {
@@ -22,7 +25,7 @@ namespace PizzaBox.WebClient.Controllers
 
       customer.Order = new OrderViewModel()
       {
-        Stores = _ctx.GetStores()
+        Stores = _ctx.GetStoreNames()
       };
 
       return View("home", customer);

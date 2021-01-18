@@ -1,0 +1,33 @@
+@model PizzaBox.WebClient.Models.PizzaViewModel;
+
+<form asp-action="add" asp-controller="order" asp-antiforgery="true" method="POST">
+  <section>
+    <p>Select Pizza</p>
+  </section>
+
+  <div>
+    @foreach (var item in @Model.AvailablePizzaNames)
+    {
+      <input type="radio" asp-for="@Model.ChosenPizza" value="@item">
+      <label for="@item">@item</label>
+    }
+  </div>
+
+  <div>
+    @foreach (var item in @Model.AvailableCrustNames)
+    {
+      <input type="radio" asp-for="@Model.ChosenCrust" value="@item">
+      <label for="@item">@item</label>
+    }
+  </div>
+
+  <div>
+    @foreach (var item in @Model.AvailableSizeNames)
+    {
+      <input type="radio" asp-for="@Model.ChosenSize" value="@item">
+      <label for="@item">@item</label>
+    }
+  </div>
+
+  <button type="submit">Add Pizza to Order</button>
+</form>

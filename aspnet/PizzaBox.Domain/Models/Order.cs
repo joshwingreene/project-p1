@@ -152,29 +152,47 @@ namespace PizzaBox.Domain.Models
         return Pizzas.Count == 0;
     }
 
-    private void AddMajorPizzaParts(APizzaModel currentPizza, List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
+    public void AddSpecifiedPizza(string pizzaType, string crustName, string sizeName, List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
     {
-        currentPizza.AddCrust(availCrusts);
-        currentPizza.AddSize(availSizes);
+        switch(pizzaType)
+        {
+            case "Meat":
+                MakeMeatPizza(crustName, sizeName, availCrusts, availSizes, availToppings);
+                break;
+            case "Pineapple":
+                MakePineapplePizza(crustName, sizeName, availCrusts, availSizes, availToppings);
+                break;
+            case "Gumbo":
+                MakeGumboPizza(crustName, sizeName, availCrusts, availSizes, availToppings);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void AddMajorPizzaParts(APizzaModel currentPizza, string crustName, string sizeName, List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
+    {
+        currentPizza.AddCrust(availCrusts, crustName);
+        currentPizza.AddSize(availSizes, sizeName);
         currentPizza.AddToppings(availToppings);
     }
 
-    public void MakeMeatPizza(List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
+    public void MakeMeatPizza(string crustName, string sizeName, List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
     {
         Pizzas.Add(_pizzaFactory.Make<MeatPizza>());
-        AddMajorPizzaParts(Pizzas.Last(), availCrusts, availSizes, availToppings);
+        AddMajorPizzaParts(Pizzas.Last(), crustName, sizeName, availCrusts, availSizes, availToppings);
     }
 
-    public void MakePineapplePizza(List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
+    public void MakePineapplePizza(string crustName, string sizeName, List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
     {
         Pizzas.Add(_pizzaFactory.Make<PineapplePizza>());
-        AddMajorPizzaParts(Pizzas.Last(), availCrusts, availSizes, availToppings);
+        AddMajorPizzaParts(Pizzas.Last(), crustName, sizeName, availCrusts, availSizes, availToppings);
     }
 
-    public void MakeGumboPizza(List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
+    public void MakeGumboPizza(string crustName, string sizeName, List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
     {
         Pizzas.Add(_pizzaFactory.Make<GumboPizza>());
-        AddMajorPizzaParts(Pizzas.Last(), availCrusts, availSizes, availToppings);
+        AddMajorPizzaParts(Pizzas.Last(), crustName, sizeName, availCrusts, availSizes, availToppings);
     }
   }
 }
