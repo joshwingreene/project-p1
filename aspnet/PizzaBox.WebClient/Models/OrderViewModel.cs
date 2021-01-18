@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using PizzaBox.Domain.Models;
 
 namespace PizzaBox.WebClient.Models
 {
@@ -10,5 +9,7 @@ namespace PizzaBox.WebClient.Models
 
     [Required]
     public string Store { get; set; }
+
+    public List<PizzaViewModel> Pizzas { get; set; }
   }
 }

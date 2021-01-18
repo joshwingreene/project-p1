@@ -21,6 +21,16 @@ namespace PizzaBox.WebClient.Controllers
       _ctx = context;
     }
 
+    private string SerializeOrder(Order order)
+    {
+      return JsonSerializer.Serialize(order);
+    }
+
+    private Order DeserializeOrder(object orderTempData)
+    {
+      return JsonSerializer.Deserialize<Order>(orderTempData.ToString());
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Post(OrderViewModel model)
@@ -53,30 +63,30 @@ namespace PizzaBox.WebClient.Controllers
           Store = _ctx.GetStores().FirstOrDefault(s => s.Name == model.Store)
         };
 
-        string orderJson = JsonSerializer.Serialize(order);
+        ViewData["Title"] = "Select Pizza";
+        TempData["Order"] = SerializeOrder(order);
 
-        TempData["Order"] = orderJson;
-
-        PizzaViewModel Pizza = new PizzaViewModel()
+        PizzaViewModel PizzaVM = new PizzaViewModel()
         {
           AvailablePizzaNames = new List<string>() { "Meat", "Pineapple", "Gumbo" }, // TODO: This is temp. Get the types from the db later
           AvailableCrustNames = _ctx.GetCrustNames(),
           AvailableSizeNames = _ctx.GetSizeNames()
         };
 
-        return View("SelectPizza", Pizza);
+        return View("SelectPizza", PizzaVM);
       }
       return View("home", model);
     }
 
     [HttpPost("add")]
     [ValidateAntiForgeryToken]
-    public void AddPizza(PizzaViewModel model) // Only provides the properties that were submitted in the form
+    public IActionResult AddPizza(PizzaViewModel model) // Only provides the properties that were submitted in the form
     {
-      var Order = JsonSerializer.Deserialize<Order>(TempData["Order"].ToString());
+      var Order = DeserializeOrder(TempData["Order"]);
 
       if (ModelState.IsValid)
       {
+        // TODO: Thinking of changing this to create a Pizza object directly just for the purpose of its parts being displayed
         Order.AddSpecifiedPizza(
           model.ChosenPizza,
           model.ChosenCrust,
@@ -86,9 +96,58 @@ namespace PizzaBox.WebClient.Controllers
           _ctx.GetToppings()
         );
 
-        System.Console.Write(Order);
+        var PizzaVM = new PizzaViewModel() { ChosenPizza = model.ChosenPizza, ChosenCrust = model.ChosenCrust, ChosenSize = model.ChosenSize };
+
+        var OrderVM = new OrderViewModel()
+        {
+          Store = Order.Store.Name,
+          Pizzas = new List<PizzaViewModel>() { PizzaVM }
+        };
+
+        //System.Console.Write(Order);
+
+        ViewData["Title"] = "Current Tally";
+        TempData["OrderVM"] = JsonSerializer.Serialize(OrderVM);
+
+        return View("TallyAndOptions", Order);
       }
-      //return View("home", model);
+      return View("home", model);
+    }
+
+    [HttpPost("checkout")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Checkout(Order model)
+    {
+      if (ModelState.IsValid)
+      {
+        // Generate an order from the saved view model
+        var OrderVM = JsonSerializer.Deserialize<OrderViewModel>(TempData["OrderVM"].ToString());
+
+        var Order = new Order()
+        {
+          DateModified = DateTime.Now,
+          Store = _ctx.GetStores().FirstOrDefault(s => s.Name == OrderVM.Store),
+        };
+
+        foreach (var pVM in OrderVM.Pizzas)
+        {
+          Order.AddSpecifiedPizza(
+            pVM.ChosenPizza,
+            pVM.ChosenCrust,
+            pVM.ChosenSize,
+            _ctx.GetCrusts(), // TODO: Thinking that this should only happen once per Order
+            _ctx.GetSizes(),
+            _ctx.GetToppings()
+          );
+        }
+
+        _ctx.AddOrder(Order);
+        _ctx.SaveChanges();
+
+        return View("OrderPlaced");
+      }
+
+      return View("home", model);
     }
   }
 }

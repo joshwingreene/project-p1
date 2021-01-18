@@ -2,11 +2,11 @@
 
 @{
   ViewBag.Title = "Customer - Home";
-  Layout = "_CustomLayout";
+  Layout = "_Layout";
 }
 
-<section>
+<div>
   @Model.Name
-</section>
+</div>
 
 @Html.Partial("Order", Model.Order)

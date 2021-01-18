@@ -1,0 +1,30 @@
+@model PizzaBox.Domain.Models.Order;
+
+<div>
+    <header>
+        <p>Pizzas in Order:</p>
+    </header>
+
+    <main>
+        @foreach (var p in @Model.Pizzas)
+        {
+            <p>Pizza: @p.Name</p>
+            <p>Crust: @p.Crust</p>
+            <p>Size: @p.Size</p>
+            <p>Price: @p.TypePrice</p>
+            <br>
+        }
+    </main>
+</div>
+
+<form asp-action="more" asp-controller="order" asp-antiforgery="true" method="POST">
+  <button type="submit">Add Another Pizza</button>
+</form>
+
+<form asp-action="edit" asp-controller="order" asp-antiforgery="true" method="POST">
+  <button type="submit">Edit Pizzas</button>
+</form>
+
+<form asp-action="checkout" asp-controller="order" asp-antiforgery="true" method="POST">
+  <button type="submit">Place Order</button>
+</form>
