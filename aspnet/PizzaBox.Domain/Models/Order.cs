@@ -152,6 +152,26 @@ namespace PizzaBox.Domain.Models
         return Pizzas.Count == 0;
     }
 
+    public static decimal GetSpecifiedPizzaTypePrice(string pizzaType)
+    {
+        APizzaModel pizza = null;
+
+        switch(pizzaType)
+        {
+            case "Meat":
+                pizza = new MeatPizza();
+                return pizza.TypePrice;
+            case "Pineapple":
+                pizza = new PineapplePizza();
+                return pizza.TypePrice;
+            case "Gumbo":
+                pizza = new GumboPizza();
+                return pizza.TypePrice;
+            default:
+                return 0.0m;
+        }
+    }
+
     public void AddSpecifiedPizza(string pizzaType, string crustName, string sizeName, List<Crust> availCrusts, List<Size> availSizes, List<Topping> availToppings)
     {
         switch(pizzaType)

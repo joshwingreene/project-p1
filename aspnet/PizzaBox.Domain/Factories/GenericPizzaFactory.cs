@@ -2,7 +2,7 @@ using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Factories
 {
-    class GenericPizzaFactory
+    public class GenericPizzaFactory
     {
         public T Make<T>() where T : APizzaModel, new()
         {

@@ -6,6 +6,7 @@
   </section>
 
   <div>
+    <p>Select Pizza Type</p>
     @foreach (var item in @Model.AvailablePizzaNames)
     {
       <input type="radio" asp-for="@Model.ChosenPizza" value="@item">
@@ -14,6 +15,7 @@
   </div>
 
   <div>
+    <p>Select Crust Type</p>
     @foreach (var item in @Model.AvailableCrustNames)
     {
       <input type="radio" asp-for="@Model.ChosenCrust" value="@item">
@@ -22,6 +24,7 @@
   </div>
 
   <div>
+    <p>Select Size Type</p>
     @foreach (var item in @Model.AvailableSizeNames)
     {
       <input type="radio" asp-for="@Model.ChosenSize" value="@item">

@@ -1,4 +1,4 @@
-@model PizzaBox.Domain.Models.Order;
+@model PizzaBox.WebClient.Models.OrderViewModel;
 
 <div>
     <header>
@@ -8,9 +8,9 @@
     <main>
         @foreach (var p in @Model.Pizzas)
         {
-            <p>Pizza: @p.Name</p>
-            <p>Crust: @p.Crust</p>
-            <p>Size: @p.Size</p>
+            <p>Pizza: @p.ChosenPizza</p>
+            <p>Crust: @p.ChosenCrust</p>
+            <p>Size: @p.ChosenSize</p>
             <p>Price: @p.TypePrice</p>
             <br>
         }

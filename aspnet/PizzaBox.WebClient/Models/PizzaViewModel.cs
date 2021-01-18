@@ -19,5 +19,7 @@ namespace PizzaBox.WebClient.Models
 
     [Required]
     public string ChosenSize { get; set; }
+
+    public decimal TypePrice { get; set; }
   }
 }
