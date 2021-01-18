@@ -54,21 +54,52 @@ namespace PizzaBox.WebClient.Controllers
     }
     */
 
+    private decimal GetSpecifiedSizePrice(string sizeName)
+    {
+      foreach (var s in _ctx.GetSizes())
+      {
+          if (s.Name == sizeName)
+          {
+            return s.Price;
+          }
+      }
+
+      return 0.0m;
+    }
+
+    private decimal GetSpecifiedCrustPrice(string crustName)
+    {
+      foreach (var c in _ctx.GetCrusts())
+      {
+          if (c.Name == crustName)
+          {
+            return c.Price;
+          }
+      }
+
+      return 0.0m;
+    }
+
+    private PizzaViewModel InitPizzaViewModel()
+    {
+      return new PizzaViewModel()
+        {
+          AvailablePizzaNames = new List<string>() { "Meat", "Pineapple", "Gumbo" }, // TODO: This is temp. Get the types from the db later
+          AvailableCrustNames = _ctx.GetCrustNames(),
+          AvailableSizeNames = _ctx.GetSizeNames()
+        };
+    }
+
     [HttpPost("create")]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(OrderViewModel model) // Only provides the properties that were submitted in the form
+    public IActionResult CreateOrder(OrderViewModel model) // Only provides the properties that were submitted in the form
     {
       if (ModelState.IsValid)
       {
         ViewData["Title"] = "Select Pizza";
         TempData["OrderVM"] = SerializeOrderViewModel(model);
 
-        PizzaViewModel PizzaVM = new PizzaViewModel()
-        {
-          AvailablePizzaNames = new List<string>() { "Meat", "Pineapple", "Gumbo" }, // TODO: This is temp. Get the types from the db later
-          AvailableCrustNames = _ctx.GetCrustNames(),
-          AvailableSizeNames = _ctx.GetSizeNames()
-        };
+        PizzaViewModel PizzaVM = InitPizzaViewModel();
 
         return View("SelectPizza", PizzaVM);
       }
@@ -77,27 +108,34 @@ namespace PizzaBox.WebClient.Controllers
 
     [HttpPost("add")]
     [ValidateAntiForgeryToken]
-    public IActionResult AddPizza(PizzaViewModel model) // Only provides the properties that were submitted in the form
+    public IActionResult AddPizza(PizzaViewModel pizzaViewModel) // Only provides the properties that were submitted in the form
     {
-      var OrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
-
       if (ModelState.IsValid)
       {
-        var PizzaVM = new PizzaViewModel() { 
-          ChosenPizza = model.ChosenPizza, 
-          ChosenCrust = model.ChosenCrust, 
-          ChosenSize = model.ChosenSize, 
-          TypePrice = Order.GetSpecifiedPizzaTypePrice(model.ChosenPizza) 
-        };
+        var OrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
 
-        OrderVM.Pizzas = new List<PizzaViewModel>() { PizzaVM };
+        pizzaViewModel.TypePrice = Order.GetSpecifiedPizzaTypePrice(pizzaViewModel.ChosenPizza);
+        pizzaViewModel.CrustPrice = GetSpecifiedCrustPrice(pizzaViewModel.ChosenCrust);
+        pizzaViewModel.SizePrice = GetSpecifiedSizePrice(pizzaViewModel.ChosenSize);
+        
+        OrderVM.Pizzas.Add(pizzaViewModel);
 
         ViewData["Title"] = "Current Tally";
         TempData["OrderVM"] = SerializeOrderViewModel(OrderVM);
 
         return View("TallyAndOptions", OrderVM);
       }
-      return View("home", model);
+      return View("home", pizzaViewModel);
+    }
+
+    [HttpGet("more")]
+    public IActionResult AddMorePizzas()
+    {
+      ViewData["Title"] = "Select Pizza";
+
+      PizzaViewModel PizzaVM = InitPizzaViewModel();
+
+      return View("SelectPizza", PizzaVM);
     }
 
     [HttpPost("checkout")]

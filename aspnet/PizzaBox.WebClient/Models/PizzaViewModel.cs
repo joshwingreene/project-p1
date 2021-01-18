@@ -21,5 +21,14 @@ namespace PizzaBox.WebClient.Models
     public string ChosenSize { get; set; }
 
     public decimal TypePrice { get; set; }
+
+    public decimal SizePrice { get; set; }
+
+    public decimal CrustPrice { get; set; }
+
+    public decimal GetTotalPrice()
+    {
+      return TypePrice + SizePrice + CrustPrice;
+    }
   }
 }

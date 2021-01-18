@@ -2,22 +2,26 @@
 
 <div>
     <header>
-        <p>Pizzas in Order:</p>
+        <h3>Pizzas in Order:</h3>
     </header>
 
     <main>
         @foreach (var p in @Model.Pizzas)
         {
-            <p>Pizza: @p.ChosenPizza</p>
-            <p>Crust: @p.ChosenCrust</p>
-            <p>Size: @p.ChosenSize</p>
-            <p>Price: @p.TypePrice</p>
+            <p>Type: @p.ChosenPizza (@p.TypePrice)</p>
+            <p>Crust: @p.ChosenCrust (@p.CrustPrice)</p>
+            <p>Size: @p.ChosenSize (@p.SizePrice)</p>
+            <p>Price: @p.GetTotalPrice()</p>
             <br>
         }
     </main>
+
+    <footer>
+        <p>Current Total: @Model.GetCurrentTally()</p>
+    </footer>
 </div>
 
-<form asp-action="more" asp-controller="order" asp-antiforgery="true" method="POST">
+<form asp-action="more" asp-controller="order" asp-antiforgery="true" method="GET">
   <button type="submit">Add Another Pizza</button>
 </form>
 
