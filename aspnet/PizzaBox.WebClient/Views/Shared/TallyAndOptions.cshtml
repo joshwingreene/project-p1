@@ -26,9 +26,13 @@
 </form>
 
 <form asp-action="edit_order" asp-controller="order" asp-antiforgery="true" method="GET">
-  <button type="submit">Edit Pizzas</button>
+  <button type="submit" disabled="@(Model.Pizzas.Count == 0)" >Edit Pizzas</button>
 </form>
 
 <form asp-action="checkout" asp-controller="order" asp-antiforgery="true" method="POST">
-  <button type="submit">Place Order</button>
+  <button type="submit" disabled="@(Model.Pizzas.Count == 0)" >Place Order</button>
+</form>
+
+<form asp-action="cancel_order" asp-controller="order" asp-antiforgery="true" method="GET">
+  <button type="submit" hidden="@(Model.Pizzas.Count != 0)" >Cancel Order</button>
 </form>

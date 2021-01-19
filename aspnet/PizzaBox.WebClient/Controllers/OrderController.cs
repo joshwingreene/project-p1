@@ -189,7 +189,7 @@ namespace PizzaBox.WebClient.Controllers
     }
 
     [HttpPost("update_pizza")]
-    public IActionResult UpdatePizza(PizzaViewModel pizzaViewModel) // Looks like I have to manually call a put method based on https://www.tutorialsteacher.com/webapi/consume-web-api-put-method-in-aspnet-mvc
+    public IActionResult UpdatePizza(PizzaViewModel pizzaViewModel) // Looks like I would have to manually call a put method based on https://www.tutorialsteacher.com/webapi/consume-web-api-put-method-in-aspnet-mvc
     {
       if (ModelState.IsValid)
       {
@@ -206,6 +206,20 @@ namespace PizzaBox.WebClient.Controllers
         return View("TallyAndOptions", OrderVM);
       }
       return View("PizzaEditor", pizzaViewModel);
+    }
+
+    [HttpGet("remove_pizza")]
+    public IActionResult RemovePizza() // Looks like I would have to manually call a delete method based on https://www.tutorialsteacher.com/webapi/consume-web-api-delete-method-in-aspnet-mvc
+    {
+      // Use the index to delete the pizza from the order
+      OrderViewModel OrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
+      int SelectedPizzaIndex = (int) TempData["SelectedPizzaIndex"];
+
+      OrderVM.Pizzas.RemoveAt(SelectedPizzaIndex);
+
+      TempData["OrderVM"] = SerializeOrderViewModel(OrderVM);
+
+      return View("TallyAndOptions", OrderVM);
     }
 
     [HttpPost("checkout")]
