@@ -222,40 +222,35 @@ namespace PizzaBox.WebClient.Controllers
       return View("TallyAndOptions", OrderVM);
     }
 
-    [HttpPost("checkout")]
-    [ValidateAntiForgeryToken]
-    public IActionResult Checkout(Order model)
+    [HttpGet("checkout")]
+    public IActionResult Checkout()
     {
-      if (ModelState.IsValid)
+      // Generate an order from the saved view model
+      var OrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
+
+      var Order = new Order()
       {
-        // Generate an order from the saved view model
-        var OrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
+        DateModified = DateTime.Now,
+        Store = _ctx.GetStores().FirstOrDefault(s => s.Name == OrderVM.Store),
+      };
 
-        var Order = new Order()
-        {
-          DateModified = DateTime.Now,
-          Store = _ctx.GetStores().FirstOrDefault(s => s.Name == OrderVM.Store),
-        };
-
-        foreach (var pVM in OrderVM.Pizzas)
-        {
-          Order.AddSpecifiedPizza(
-            pVM.ChosenPizza,
-            pVM.ChosenCrust,
-            pVM.ChosenSize,
-            _ctx.GetCrusts(), // TODO: Thinking that this should only happen once per Order
-            _ctx.GetSizes(),
-            _ctx.GetToppings()
-          );
-        }
-
-        _ctx.AddOrder(Order);
-        _ctx.SaveChanges();
-
-        return View("OrderPlaced");
+      foreach (var pVM in OrderVM.Pizzas)
+      {
+        Order.AddSpecifiedPizza(
+          pVM.ChosenPizza,
+          pVM.ChosenCrust,
+          pVM.ChosenSize,
+          _ctx.GetCrusts(), // TODO: Thinking that this should only happen once per Order
+          _ctx.GetSizes(),
+          _ctx.GetToppings()
+        );
       }
 
-      return View("home", model);
+      _ctx.AddOrder(Order);
+      _ctx.SaveChanges();
+
+      // Send a new OrderViewModel with the current store to the view just in case the customer decides to make another order
+      return View("OrderPlaced", new OrderViewModel() { Store = OrderVM.Store });
     }
   }
 }

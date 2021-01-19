@@ -29,7 +29,7 @@
   <button type="submit" disabled="@(Model.Pizzas.Count == 0)" >Edit Pizzas</button>
 </form>
 
-<form asp-action="checkout" asp-controller="order" asp-antiforgery="true" method="POST">
+<form asp-action="checkout" asp-controller="order" method="GET">
   <button type="submit" disabled="@(Model.Pizzas.Count == 0)" >Place Order</button>
 </form>
 

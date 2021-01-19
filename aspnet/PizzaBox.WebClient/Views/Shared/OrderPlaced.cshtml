@@ -1,0 +1,15 @@
+@model PizzaBox.WebClient.Models.OrderViewModel;
+
+<form asp-action="create" asp-controller="order" asp-antiforgery="true" method="POST">
+  <label for="@Model.Store">Current Store</label>
+  <input type="text" asp-for="@Model.Store" value="@Model.Store" readonly>
+  <button type="submit">Make Another Order</button>
+</form>
+
+<form asp-action="order_history" asp-controller="user" method="GET">
+  <button type="submit">Show Order History</button>
+</form>
+
+<form asp-action="exit" asp-controller="customer" method="GET">
+  <button type="submit">Exit</button>
+</form>
