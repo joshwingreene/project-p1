@@ -80,6 +80,13 @@ namespace PizzaBox.WebClient.Controllers
       return 0.0m;
     }
 
+    private void AddAssocPricingToPizzaViewModel(PizzaViewModel pizzaViewModel, string pizzaType, string crustName, string sizeName)
+    {
+      pizzaViewModel.TypePrice = Order.GetSpecifiedPizzaTypePrice(pizzaViewModel.ChosenPizza);
+      pizzaViewModel.CrustPrice = GetSpecifiedCrustPrice(pizzaViewModel.ChosenCrust);
+      pizzaViewModel.SizePrice = GetSpecifiedSizePrice(pizzaViewModel.ChosenSize);
+    }
+
     private PizzaViewModel InitPizzaViewModel()
     {
       return new PizzaViewModel()
@@ -103,7 +110,7 @@ namespace PizzaBox.WebClient.Controllers
 
         return View("SelectPizza", PizzaVM);
       }
-      return View("home", model);
+      return View("Order", model);
     }
 
     [HttpPost("add")]
@@ -114,9 +121,7 @@ namespace PizzaBox.WebClient.Controllers
       {
         var OrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
 
-        pizzaViewModel.TypePrice = Order.GetSpecifiedPizzaTypePrice(pizzaViewModel.ChosenPizza);
-        pizzaViewModel.CrustPrice = GetSpecifiedCrustPrice(pizzaViewModel.ChosenCrust);
-        pizzaViewModel.SizePrice = GetSpecifiedSizePrice(pizzaViewModel.ChosenSize);
+        AddAssocPricingToPizzaViewModel(pizzaViewModel, pizzaViewModel.ChosenPizza, pizzaViewModel.ChosenCrust, pizzaViewModel.ChosenSize);
         
         OrderVM.Pizzas.Add(pizzaViewModel);
 
@@ -125,7 +130,7 @@ namespace PizzaBox.WebClient.Controllers
 
         return View("TallyAndOptions", OrderVM);
       }
-      return View("home", pizzaViewModel);
+      return View("SelectPizza", pizzaViewModel);
     }
 
     [HttpGet("more")]
@@ -180,16 +185,27 @@ namespace PizzaBox.WebClient.Controllers
         ViewData["Title"] = "Edit Pizza";
         return View("PizzaEditor", AssociatedPizzaVM);
       }
-      System.Console.WriteLine(ModelState.IsValid == true ? "model is valid" : "model is not valid");
-
-      return View("home", orderEditorViewModel);
+      return View("SelectPizzaToEdit", orderEditorViewModel);
     }
 
     [HttpPost("update_pizza")]
-    public void UpdatePizza(PizzaViewModel model) // Looks like I have to manually call the put method based on https://www.tutorialsteacher.com/webapi/consume-web-api-put-method-in-aspnet-mvc
+    public IActionResult UpdatePizza(PizzaViewModel pizzaViewModel) // Looks like I have to manually call a put method based on https://www.tutorialsteacher.com/webapi/consume-web-api-put-method-in-aspnet-mvc
     {
-      System.Console.WriteLine("UpdatePizza");
-      System.Console.WriteLine("Selected Pizza Index: " + JsonSerializer.Deserialize<int>(TempData["SelectedPizzaIndex"].ToString()));
+      if (ModelState.IsValid)
+      {
+        // Use the index to update the pizza with the given values
+        OrderViewModel OrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
+        int SelectedPizzaIndex = (int) TempData["SelectedPizzaIndex"];
+
+        AddAssocPricingToPizzaViewModel(pizzaViewModel, pizzaViewModel.ChosenPizza, pizzaViewModel.ChosenCrust, pizzaViewModel.ChosenSize);
+
+        OrderVM.Pizzas[SelectedPizzaIndex] = pizzaViewModel;
+
+        TempData["OrderVM"] = SerializeOrderViewModel(OrderVM);
+
+        return View("TallyAndOptions", OrderVM);
+      }
+      return View("PizzaEditor", pizzaViewModel);
     }
 
     [HttpPost("checkout")]
