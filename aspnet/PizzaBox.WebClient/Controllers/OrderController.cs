@@ -138,6 +138,60 @@ namespace PizzaBox.WebClient.Controllers
       return View("SelectPizza", PizzaVM);
     }
 
+    [HttpGet("edit_order")]
+    public IActionResult EditOrder()
+    {
+      OrderViewModel SavedOrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
+
+      var OrderEditorVM = new OrderEditorViewModel()
+      {
+        OrderVM = SavedOrderVM
+      };
+
+      TempData["OrderVM"] = SerializeOrderViewModel(SavedOrderVM);
+
+      ViewData["Title"] = "Edit Order";
+      return View("SelectPizzaToEdit", OrderEditorVM);
+    }
+
+    [HttpPost("edit_pizza")]
+    public IActionResult EditPizzaInOrder(OrderEditorViewModel orderEditorViewModel)
+    {
+      if (ModelState.IsValid)
+      {
+        PizzaViewModel BasePizzaVM = InitPizzaViewModel(); // needed since the param's pizza view model will only include what's submitted in the form
+
+        // Return the selected pizzaViewModel to PizzaEditor
+        int SelectedPizzaIndex = orderEditorViewModel.SelectedPizzaIndex;
+
+        // Get the associated pizza view mode from the order
+        OrderViewModel OrderVM = DeserializeOrderViewModel(TempData["OrderVM"]);
+
+        PizzaViewModel AssociatedPizzaVM = OrderVM.Pizzas.ElementAtOrDefault(SelectedPizzaIndex);
+        
+        // Give it the properties that are missing
+        AssociatedPizzaVM.AvailablePizzaNames = BasePizzaVM.AvailablePizzaNames;
+        AssociatedPizzaVM.AvailableCrustNames = BasePizzaVM.AvailableCrustNames;
+        AssociatedPizzaVM.AvailableSizeNames = BasePizzaVM.AvailableSizeNames;
+
+        TempData["OrderVM"] = SerializeOrderViewModel(OrderVM);
+        TempData["SelectedPizzaIndex"] = SelectedPizzaIndex;
+
+        ViewData["Title"] = "Edit Pizza";
+        return View("PizzaEditor", AssociatedPizzaVM);
+      }
+      System.Console.WriteLine(ModelState.IsValid == true ? "model is valid" : "model is not valid");
+
+      return View("home", orderEditorViewModel);
+    }
+
+    [HttpPost("update_pizza")]
+    public void UpdatePizza(PizzaViewModel model) // Looks like I have to manually call the put method based on https://www.tutorialsteacher.com/webapi/consume-web-api-put-method-in-aspnet-mvc
+    {
+      System.Console.WriteLine("UpdatePizza");
+      System.Console.WriteLine("Selected Pizza Index: " + JsonSerializer.Deserialize<int>(TempData["SelectedPizzaIndex"].ToString()));
+    }
+
     [HttpPost("checkout")]
     [ValidateAntiForgeryToken]
     public IActionResult Checkout(Order model)

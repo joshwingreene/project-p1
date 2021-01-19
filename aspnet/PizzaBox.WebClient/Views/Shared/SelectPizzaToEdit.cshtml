@@ -1,0 +1,17 @@
+@model PizzaBox.WebClient.Models.OrderEditorViewModel;
+
+<form asp-action="edit_pizza" asp-controller="order" asp-antiforgery="true" method="POST">
+  <section>
+    <h3>Select Pizza To Edit</h3>
+  </section>
+
+  <section>
+    @for(var i = 0; i < @Model.OrderVM.Pizzas.Count; i++)
+    {
+      <input type="radio" asp-for="@Model.SelectedPizzaIndex" value="@i">
+      <label for="@i">@Model.OrderVM.Pizzas[i].ChosenPizza</label>
+    }
+  </section>
+
+  <button type="submit">Confirm</button>
+</form>
