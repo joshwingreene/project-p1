@@ -8,7 +8,7 @@
   <section>
     @for(var i = 0; i < @Model.OrderVM.Pizzas.Count; i++)
     {
-      <input type="radio" asp-for="@Model.SelectedPizzaIndex" value="@i">
+      <input type="radio" asp-for="@Model.SelectedPizzaIndex" value="@i" required>
       <label for="@i">@Model.OrderVM.Pizzas[i].ChosenPizza</label>
     }
   </section>

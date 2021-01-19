@@ -4,7 +4,7 @@
   <section>
     @foreach (var item in Model.Stores)
     {
-      <input type="radio" asp-for="@Model.Store" value="@item">
+      <input type="radio" asp-for="@Model.Store" value="@item" required>
       <label for="@item">@item</label>
     }
   </section>

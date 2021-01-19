@@ -9,7 +9,7 @@
     <p>Select Pizza Type</p>
     @foreach (var item in @Model.AvailablePizzaNames)
     {
-      <input type="radio" asp-for="@Model.ChosenPizza" value="@item">
+      <input type="radio" asp-for="@Model.ChosenPizza" value="@item" required>
       <label for="@item">@item</label>
     }
   </div>
@@ -18,7 +18,7 @@
     <p>Select Crust Type</p>
     @foreach (var item in @Model.AvailableCrustNames)
     {
-      <input type="radio" asp-for="@Model.ChosenCrust" value="@item">
+      <input type="radio" asp-for="@Model.ChosenCrust" value="@item" required>
       <label for="@item">@item</label>
     }
   </div>
@@ -27,7 +27,7 @@
     <p>Select Size Type</p>
     @foreach (var item in @Model.AvailableSizeNames)
     {
-      <input type="radio" asp-for="@Model.ChosenSize" value="@item">
+      <input type="radio" asp-for="@Model.ChosenSize" value="@item" required>
       <label for="@item">@item</label>
     }
   </div>
