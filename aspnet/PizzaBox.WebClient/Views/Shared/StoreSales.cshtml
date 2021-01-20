@@ -1,0 +1,19 @@
+@model PizzaBox.Domain.Models.PizzaBundler
+
+<section>
+    <h4>Total Number of Meat Pizzas Sold: @Model.meatPizzas.Count</h4>
+    <h4>Total Number of Pineapple Pizzas Sold: @Model.pineapplePizzas.Count</h4>
+    <h4>Total Number of Gumbo Pizzas Sold: @Model.gumboPizzas.Count</h4>
+</section>
+
+<form asp-action="order_history" asp-controller="store" asp-antiforgery="true" method="GET">
+  <button type="submit">View Order History</button>
+</form>
+
+<form asp-action="sales" asp-controller="store" method="GET">
+  <button type="submit">View Sales</button>
+</form>
+
+<form asp-action="home" asp-controller="app" method="GET">
+  <button type="submit">Log Out</button>
+</form>

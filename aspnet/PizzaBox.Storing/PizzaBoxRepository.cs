@@ -117,5 +117,15 @@ namespace PizzaBox.Storing
 
         return userOrdersFromStore;
     }
+
+    public List<Order> GetStoreOrders(Store store)
+    {
+        var st = _ctx.Stores
+                .Include(o => o.Orders).ThenInclude(p => p.Pizzas).ThenInclude(c => c.Crust)
+                .Include(o => o.Orders).ThenInclude(p => p.Pizzas).ThenInclude(s => s.Size)
+                .FirstOrDefault(s1 => s1.EntityId == store.EntityId);
+
+        return (st.Orders);
+    }
   }
 }

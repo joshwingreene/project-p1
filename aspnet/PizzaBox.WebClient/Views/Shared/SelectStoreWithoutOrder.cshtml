@@ -1,0 +1,13 @@
+@model PizzaBox.WebClient.Models.StoreViewModel
+
+<form asp-action="view_store_options" asp-controller="store" asp-antiforgery="true" method="POST">
+  <section>
+    @foreach (var item in Model.Stores)
+    {
+      <input type="radio" asp-for="@Model.Name" value="@item" required>
+      <label for="@item">@item</label>
+    }
+  </section>
+
+  <button type="submit">Select Store</button>
+</form>
