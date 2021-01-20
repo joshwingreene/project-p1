@@ -1,0 +1,34 @@
+@model List<PizzaBox.Domain.Models.Order>
+
+<section>
+
+    <h4>Note: Newest Orders are Shown First</h4>
+    <br />
+    @for(var i = 0; i < @Model.Count; i++)
+    {
+        <h5>Order Placed On @Model[i].DateModified</h5>
+        <br />
+        @for (var p = 0; p < @Model[i].Pizzas.Count; p++)
+        {
+            <h6>Pizza # @(p+1)</h6>
+            <p>- Type: @Model[i].Pizzas[p].Name $(@Model[i].Pizzas[p].TypePrice)</p>
+            <p>- Crust: @Model[i].Pizzas[p].Crust $(@Model[i].Pizzas[p].Crust.Price)</p>
+            <p>- Size: @Model[i].Pizzas[p].Size $(@Model[i].Pizzas[p].Size.Price)</p>
+            <br />
+        }
+        <h6>Total Price: $@Model[i].GetCurrentTally()</h6>
+        <br />
+    }
+</section>
+
+<form asp-action="create" asp-controller="order" asp-antiforgery="true" method="POST">
+  <button type="submit">Make Another Order</button>
+</form>
+
+<form asp-action="order_history" asp-controller="customer" method="GET">
+  <button type="submit">Show Order History</button>
+</form>
+
+<form asp-action="home" asp-controller="app" method="GET">
+  <button type="submit">Log Out</button>
+</form>

@@ -63,8 +63,7 @@ namespace PizzaBox.WebClient.Controllers
     [HttpPost("login")]
     public IActionResult Login(CustomerViewModel customerViewModel) // model is not valid as well
     {
-      System.Console.WriteLine("Login");
-
+      //System.Console.WriteLine("Login");
       //System.Console.WriteLine(ModelState.IsValid ? "model is valid" : "model is not valid");
 
       // will return this model in order to get access to its name after a store is chosen
@@ -94,9 +93,15 @@ namespace PizzaBox.WebClient.Controllers
     [HttpGet("order_history")]
     public IActionResult ViewOrderHistory()
     {
-      // Thinking that we should get the customer for temp data
+      var Username = TempData["Username"].ToString();
 
-      return View("home"); // will be changed
+      var Orders = _ctx.GetCustomerOrderHistory(_ctx.GetCustomer(Username));
+
+      Orders.Sort();
+      
+      TempData["Username"] = Username;
+
+      return View("OrderHistory", Orders);
     }
   }
 }

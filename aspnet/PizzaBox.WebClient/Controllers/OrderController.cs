@@ -251,12 +251,19 @@ namespace PizzaBox.WebClient.Controllers
         );
       }
 
-      // Get the customer and add the order to its list of orders
-      var Customer = _ctx.GetCustomer(TempData["Username"].ToString()); // only lives for two requests
+      var Username = TempData["Username"].ToString();
 
-      Customer.Orders.Add(Order);
+      // Get the customer and add the order to its list of orders
+      var Customer = _ctx.GetCustomer(Username);
+
+      Customer.SelectedStore.Orders.Add(Order);
+      Customer.Orders.Add(Customer.SelectedStore.Orders.Last());
+
+      //Customer.Orders.Add(Order);
 
       _ctx.SaveChanges();
+
+      TempData["Username"] = Username;
 
       // Send a new OrderViewModel with the current store to the view just in case the customer decides to make another order
       return View("OrderPlaced", new OrderViewModel() { Store = OrderVM.Store });

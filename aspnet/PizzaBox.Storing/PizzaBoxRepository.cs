@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace PizzaBox.Storing
 {
@@ -87,5 +88,34 @@ namespace PizzaBox.Storing
       // return _ctx.Set<T>().Select(t => t.GetType().GetProperty()).ToList();
     }
     */
+
+    public List<Order> GetCustomerOrderHistory(Customer customer)
+    {
+        var c = _ctx.Customers
+                    .Include(s => s.SelectedStore)
+                    .Include(u => u.Orders).ThenInclude(o => o.Pizzas).ThenInclude(c => c.Crust)
+                    .Include(u => u.Orders).ThenInclude(o => o.Pizzas).ThenInclude(s => s.Size)
+                    .Include(u => u.Orders).ThenInclude(o => o.Pizzas).ThenInclude(pt => pt.PizzaToppings).ThenInclude(t => t.Topping)
+                    .FirstOrDefault(u => u.EntityId == customer.EntityId);
+
+        var store = _ctx.Stores
+                        .Include(o => o.Orders)
+                        .FirstOrDefault(st => st.Name == c.SelectedStore.Name);
+
+        List<Order> userOrdersFromStore = new List<Order>();
+
+        for (var i = 0; i < store.Orders.Count; i++)
+        {
+            foreach (var ctr in c.Orders)
+            {
+                if (ctr.EntityId == store.Orders[i].EntityId)
+                {
+                    userOrdersFromStore.Add(ctr);
+                }
+            }
+        }
+
+        return userOrdersFromStore;
+    }
   }
 }
