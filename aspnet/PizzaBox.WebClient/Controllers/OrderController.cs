@@ -265,8 +265,13 @@ namespace PizzaBox.WebClient.Controllers
 
       TempData["Username"] = Username;
 
+      var CustomerViewModel = new CustomerViewModel() {
+        Username = Username,
+        Order = new OrderViewModel() { Store = OrderVM.Store }
+      };
+
       // Send a new OrderViewModel with the current store to the view just in case the customer decides to make another order
-      return View("OrderPlaced", new OrderViewModel() { Store = OrderVM.Store });
+      return View("OrderPlaced", CustomerViewModel);
     }
   }
 }

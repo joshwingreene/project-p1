@@ -77,19 +77,6 @@ namespace PizzaBox.WebClient.Controllers
       return View("Order", customerViewModel);
     }
 
-    [HttpGet("start_order_process")]
-    public IActionResult StartOrder()
-    {
-      var customer = new CustomerViewModel();
-
-      customer.Order = new OrderViewModel()
-      {
-        Stores = _ctx.GetStoreNames()
-      };
-
-      return View("Order", customer.Order);
-    }
-
     [HttpGet("order_history")]
     public IActionResult ViewOrderHistory()
     {

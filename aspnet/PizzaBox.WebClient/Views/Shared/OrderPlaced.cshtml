@@ -1,8 +1,8 @@
-@model PizzaBox.WebClient.Models.OrderViewModel;
+@model PizzaBox.WebClient.Models.CustomerViewModel;
 
 <form asp-action="create" asp-controller="order" asp-antiforgery="true" method="POST">
-  <label for="@Model.Store">Current Store</label>
-  <input type="text" asp-for="@Model.Store" value="@Model.Store" readonly>
+  <label for="@Model.Order.Store">Current Store</label>
+  <input type="text" asp-for="@Model.Order.Store" value="@Model.Order.Store" readonly>
   <button type="submit">Make Another Order</button>
 </form>
 
