@@ -1,10 +1,10 @@
-@model PizzaBox.WebClient.Models.OrderViewModel
+@model PizzaBox.WebClient.Models.CustomerViewModel
 
 <form asp-action="create" asp-controller="order" asp-antiforgery="true" method="POST">
   <section>
-    @foreach (var item in Model.Stores)
+    @foreach (var item in Model.Order.Stores)
     {
-      <input type="radio" asp-for="@Model.Store" value="@item" required>
+      <input type="radio" asp-for="@Model.Order.Store" value="@item" required>
       <label for="@item">@item</label>
     }
   </section>

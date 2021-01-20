@@ -8,6 +8,7 @@ namespace PizzaBox.Storing
 {
   public class PizzaBoxContext : DbContext
   {
+    public DbSet<Customer> Customers { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<Store> Stores { get; set; }
     public DbSet<Crust> Crusts { get; set; }
@@ -19,6 +20,7 @@ namespace PizzaBox.Storing
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+      builder.Entity<Customer>().HasKey(cu => cu.EntityId);
       builder.Entity<Order>().HasKey(o => o.EntityId);
       builder.Entity<Store>().HasKey(s => s.EntityId);
       builder.Entity<APizzaModel>().HasKey(p => p.EntityId);

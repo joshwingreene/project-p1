@@ -14,9 +14,30 @@ namespace PizzaBox.Storing
       _ctx = context;
     }
 
+    public bool CheckIfUsernameExists(string username)
+    {
+        return null != _ctx.Customers.FirstOrDefault<Customer>(c => c.Username == username);
+    }
+
+    public Customer GetCustomer(string username)
+    {
+        return _ctx.Customers.FirstOrDefault<Customer>(c => c.Username == username);
+    }
+
     public void AddOrder(Order order)
     {
       _ctx.Orders.Add(order);
+    }
+
+    public void SaveCustomer(Customer customer)
+    {
+        _ctx.Add(customer);
+        SaveChanges();
+    }
+
+    public Store ReadStore(string name)
+    {
+        return _ctx.Stores.FirstOrDefault<Store>(store => store.Name == name);
     }
 
     public void SaveChanges()

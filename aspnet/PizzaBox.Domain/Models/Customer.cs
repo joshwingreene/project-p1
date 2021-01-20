@@ -5,21 +5,18 @@ using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models // the point is to be specific as to where the code is
 {
-    public class User : AModel
+    public class Customer : AModel
     {
         public string Username { get; set; }
-
-        public string Password { get; set; }
 
         public List<Order> Orders { get; set; }
 
         public Store SelectedStore { get; set; }
 
-        public User(string username, string password)
+        public Customer(string username)
         {
             Orders = new List<Order>();
             Username = username;
-            Password = password;
         }
 
         public void DisplayNumberOfPastOrders()

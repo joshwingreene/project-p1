@@ -1,0 +1,11 @@
+@model PizzaBox.WebClient.Models.CustomerViewModel
+
+<form asp-action="login" asp-controller="customer" method="POST">
+  <input type="text" placeholder="Enter username" asp-for="@Model.Username" value="" />
+  <button type="submit">Login</button>
+</form>
+
+<form asp-action="create_account" asp-controller="customer" method="POST">
+  <input type="text" placeholder="Enter username" asp-for="@Model.Username" value="" />
+  <button type="submit">Create Account</button>
+</form>

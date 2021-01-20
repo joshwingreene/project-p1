@@ -31,28 +31,12 @@ namespace PizzaBox.WebClient.Controllers
       return JsonSerializer.Deserialize<OrderViewModel>(modelTempData.ToString());
     }
 
-    /*
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Post(OrderViewModel model)
+    private void GetAndSaveUsername() // keeping just in case I need to worry about how long tempdata persists data
     {
-      if (ModelState.IsValid)
-      {
-        var order = new Order()
-        {
-          DateModified = DateTime.Now,
-          Store = _ctx.GetStores().FirstOrDefault(s => s.Name == model.Store)
-        };
+      var Username = TempData["Username"].ToString();
 
-        _ctx.AddOrder(order);
-        _ctx.SaveChanges();
-
-        return View("OrderPlaced");
-      }
-
-      return View("home", model);
+      TempData["Username"] = Username;
     }
-    */
 
     private decimal GetSpecifiedSizePrice(string sizeName)
     {
@@ -99,17 +83,38 @@ namespace PizzaBox.WebClient.Controllers
 
     [HttpPost("create")]
     [ValidateAntiForgeryToken]
-    public IActionResult CreateOrder(OrderViewModel model) // Only provides the properties that were submitted in the form
+    public IActionResult CreateOrder(CustomerViewModel model) // Only provides the properties that were submitted in the form
     {
+      //System.Console.WriteLine("CreateOrder");
+      //System.Console.WriteLine(ModelState.IsValid ? "model is valid" : "model is not valid");
+      
       if (ModelState.IsValid)
       {
+        // get the associated customer from the db
+        var Username = TempData["Username"].ToString();
+
+        var customer = _ctx.GetCustomer(Username);
+
+        // get the associated store form the db
+        var store = _ctx.ReadStore(model.Order.Store);
+
+        // put that store into the customer
+        customer.SelectedStore = store;
+
+        // save that store into db like P0 (it used Update, which was just a call to SaveChanges)
+        _ctx.SaveChanges();
+
+        // save the username to tempdata so it can be retrieved and used to get the user during checkout
+        TempData["Username"] = Username;
+
         ViewData["Title"] = "Select Pizza";
-        TempData["OrderVM"] = SerializeOrderViewModel(model);
+        TempData["OrderVM"] = SerializeOrderViewModel(model.Order);
 
         PizzaViewModel PizzaVM = InitPizzaViewModel();
 
         return View("SelectPizza", PizzaVM);
       }
+      
       return View("Order", model);
     }
 
@@ -246,7 +251,11 @@ namespace PizzaBox.WebClient.Controllers
         );
       }
 
-      _ctx.AddOrder(Order);
+      // Get the customer and add the order to its list of orders
+      var Customer = _ctx.GetCustomer(TempData["Username"].ToString()); // only lives for two requests
+
+      Customer.Orders.Add(Order);
+
       _ctx.SaveChanges();
 
       // Send a new OrderViewModel with the current store to the view just in case the customer decides to make another order
