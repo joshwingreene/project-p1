@@ -1,93 +1,63 @@
-# pizzabox
+# PizzaBox
 
-The goal of the project is to build a Pizza Ordering System.
+## Project Description
+PizzaBox is an MVC-based .NET application that has two major perspectives: Stores and Customers. With the Store perspective, you are able to see the store's order history and sales. For the Customer perspective, you are able to choose a store, create orders with one or more pizzas, and place your order. Additionally, you are able to edit the pizzas in your order and view your order history.
 
-## architecture (REQUIRED)
+## Technologies Used
 
-+ [solution] PizzaBox.sln
-  + [project - MVC] PizzaBox.Client.csproj
-    + OrderController, UserController, StoreController
-  + [project - ClassLib] PizzaBox.Domain.csproj
-    + think about abstraction, design patterns
-    + implement Models
-  + [project - ClassLib ] PizzaBox.Storing.csproj
-    + implement at least 1 repository
-  + [project - xunit] PizzaBox.Testing.csproj
-    + implement unit testing
+* C#
+* MVC
+* ASP.NET Core
+* EF Core
+* Azure
+* Microsoft SQL Server
+* Microsoft SQL Server Management Studio
+* xUnit Testing
 
-## requirements
+## Features
 
-The project should support objects of Customer, Store, Order, Pizza.
+### Ready Features
 
-### store
+* Create account and Log in
+* Create an order with one or more pizzas
+* View a current tally of your order
+* Checkout
+* Maker another order after checking out
+* View User's Order History
+* View a Store's Order History
+* View a Store's Sales
 
-+ [required] there should exist at least 2 stores for a user to choose from
-+ [required] each store should be able to view/list any and all of their completed/placed orders
-+ [required] each store should be able to view/list any and all of their sales (amount of revenue weekly or monthly)
+### To Do List
+* Spruce up the content area with bootstrap and css
+* Add the rests of my tests for the domain models
+* Be able to make another order after showing the customer's order history
+* Extend the sales feature so that the total revenue for each pizza type is shown
 
-### order
+## Getting Started
 
-+ [required] each order must be able to view/list/edit its collection of pizzas
-+ [required] each order must be able to compute its pricing
-+ [required] each order must be limited to a total pricing of no more than $250
-+ [required] each order must be limited to a collection of pizzas of no more than 50
+1.  Clone the repo with "git clone"
+2.  CD into "PizzaBox.WebClient"
+3.  Run "dotnet watch run"
+4.  Using the given url where the app is listening, click on it to be pushed to your preferred browser Go to your browser and 
+5.  Add '/app' to the end of the url and press enter
 
-### pizza
+## Usage
 
-+ [required] each pizza must be able to have a crust
-+ [required] each pizza must be able to have a size
-+ [required] each pizza must be able to have toppings
-+ [required] each pizza must be able to compute its pricing
-+ [required] each pizza must have no less than 2 default toppings
-+ [required] each pizza must limit its toppings to no more 5
+1. Select either Store or Customer
 
-### customer
+### Store Path
 
-+ [required] must be able to view/list its order history
-+ [required] must be able to only order from 1 location in a 24-hour period with no reset
-+ [required] must be able to only order once every 2-hour period
+2. Select a listed store
+3. Choose between three options: Order History, Sales, and Log Out
 
-## technologies
+### Customer Path
 
-+ .NET Core - ASP.NET Core MVC
-+ .NET Core - C#
-+ .NET Core - EF + SQL
-+ .NET Core - xUnit
+2. Create account with just your chosen username
+3. Select the pizza, crust, and size
+4. See Pizza Tally
+5. Choose one of 3 options: Add Another Pizza, Edit Pizzas, Place Order, (if no pizzas in your order) Cancel Order 
+6. After Placing an Order, choose either Make Another Order, Show Order History, Log Out
 
-## timelines
+## License
 
-+ due on Jan-19 at 11p Central
-+ present on Jan-20 starting at 9.30a Central
-+ implement as many requirements as you can
-
-## customer story
-
-as a customer, i should be able to do this:
-
-+ access the application
-+ see a list of locations
-+ select a location
-+ place an order
-+ with either custom or preset pizzas
-+ if custom
-+ select crust, size and toppings
-+ if preset
-+ select pizza and its size
-+ see a tally of my order
-+ add or remove more pizzas
-+ and checkout when complete with latest order
-+ see my order history
-+ make a new order
-
-## store story
-
-as a store, i should be able do this:
-
-+ access the application
-+ select options for order history, sales
-+ if order history
-+ select options for all store orders and orders associated to a user (filtering)
-+ if sales
-+ see pizza type, count, revenue by week or by month
-
-> the goal is to try to complete as many reqs as you can in the time alloted. :)
+* MIT
